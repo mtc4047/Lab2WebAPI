@@ -16,7 +16,7 @@ namespace Model
 
         public ICollection<Product>? Products { get; set; }
         public ProductGroup? ParentGroup { get; set; }
-        public ICollection<ProductGroup>? Groups { get; set; }
+        public ICollection<ProductGroup> Groups { get; set; }
         public void Configure(EntityTypeBuilder<ProductGroup> builder)
         {
             builder.HasKey(x => x.Id);
@@ -27,7 +27,7 @@ namespace Model
             builder.HasMany(d => d.Groups)
                 .WithOne(d => d.ParentGroup)
                 .HasForeignKey(d => d.ParentID)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

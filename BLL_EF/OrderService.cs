@@ -2,6 +2,7 @@
 using BLL.ServiceInterfaces;
 using DAL;
 using Microsoft.EntityFrameworkCore;
+using Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,15 +20,32 @@ namespace BLL_EF
             _context = context;
         }
 
-        public int GenerateOrder(int userId)
+        public void GenerateOrder(int userId)
         {
 
-            throw new NotImplementedException();
+            _context.Orders.Add(new Order()
+            {
+                UserID = userId,
+                Date = DateTime.Now,
+            });
+            _context.SaveChanges();
         }
 
-        public int PayOrder(int Id, int amount)
+        public void PayOrder(int Id, int amount)
         {
-            throw new NotImplementedException();
+            if(_context.Orders.Single(x => x.Id == Id).IsPaid == false)
+            {
+                double sum = 0.0;
+                foreach (var orderPosition in _context.Orders.Single(x => x.Id == Id).OrderPositions)
+                {
+                    sum += orderPosition.Amount * orderPosition.Price;
+                }
+
+                if (amount == sum)
+                    _context.Orders.Single(x => x.Id == Id).IsPaid = true;
+                _context.SaveChanges();
+            }
+
         }
     }
 }

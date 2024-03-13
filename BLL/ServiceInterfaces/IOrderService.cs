@@ -9,8 +9,8 @@ namespace BLL.ServiceInterfaces
 {
     public interface IOrderService
     {
-        int GenerateOrder(int userId);
+        void GenerateOrder(int userId);
 
-        int PayOrder(int Id, int amount);
+        void PayOrder(int Id, int amount);
     }
 }

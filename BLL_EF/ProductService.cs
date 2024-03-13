@@ -39,20 +39,35 @@ namespace BLL_EF
 
         public void DeactivateProduct(int productId)
         {
-           
-            _context.Products.Single(x => x.Id == productId).IsActive = false;
-            _context.SaveChanges();
+            var userId = _context.Products.Single(x => x.Id == productId)
+                 .BasketPositions.Single(x => x.ProductId == productId).UserId;
+            var order = _context.Orders.Single(x => x.UserID == userId);
+            if(order != null)
+            {
+                if (order.IsPaid)
+                {
+                    _context.Products.Single(x => x.Id == productId).IsActive = false;
+                    _context.SaveChanges();
+                }
+            }
+
+
         }
 
         public void DeleteProduct(int productId)
         {
-            var productToDelete = _context.Products.FirstOrDefault(x => x.Id == productId);
-            if (productToDelete != null)
+            var userId = _context.Products.Single(x => x.Id == productId)
+                .BasketPositions.Single(x => x.ProductId == productId).UserId;
+            var order = _context.Orders.Single(x => x.UserID == userId);
+            if (order.IsPaid)
             {
-                _context.Products.Remove(productToDelete);
-                _context.SaveChanges();
+                var productToDelete = _context.Products.FirstOrDefault(x => x.Id == productId);
+                if (productToDelete != null)
+                {
+                    _context.Products.Remove(productToDelete);
+                    _context.SaveChanges();
+                }
             }
-
         }
 
         public List<ProductResponseDTO> GetProducts(IProductService.ProductSortColumn sortColumn = IProductService.ProductSortColumn.Name, IProductService.SortOrder sortOrder = IProductService.SortOrder.Ascending, string filterName = null, string filterGroupName = null, int? filterGroupId = null, bool includeInactive = false)

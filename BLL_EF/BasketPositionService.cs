@@ -22,19 +22,26 @@ namespace BLL_EF
 
         public void AddProductToBasket(BasketPositionRequestDTO request)
         {
-            _context.BasketPositions.Add(new BasketPosition()
-            {
-                ProductId = request.ProductId,
-                UserId = request.UserId,
-                Amount = request.Amount,
-            });
-            _context.SaveChanges();
+            if(_context.Products.Single(x => x.Id == request.ProductId).IsActive){
+                _context.BasketPositions.Add(new BasketPosition()
+                {
+                    ProductId = request.ProductId,
+                    UserId = request.UserId,
+                    Amount = request.Amount,
+                });
+                _context.SaveChanges();
+            }
+
         }
 
         public void ChangeAmount(int userId, int productId, int newQuantity)
         {
-            _context.BasketPositions.Single(x => x.ProductId == userId && x.ProductId == productId).Amount = newQuantity;
-            _context.SaveChanges();
+            if(newQuantity > 0)
+            {
+                _context.BasketPositions.Single(x => x.ProductId == userId && x.ProductId == productId).Amount = newQuantity;
+                _context.SaveChanges();
+            }
+
         }
 
         public List<BasketPositionResponseDTO> GetBasketPositions(int userId)

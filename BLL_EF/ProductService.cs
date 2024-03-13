@@ -22,19 +22,24 @@ namespace BLL_EF
 
         public void AddProduct(ProductRequestDTO request)
         {
-            _context.Products.Add(new Product()
+            if(request.Price >0 )
             {
-                Name = request.Name,
-                Price = request.Price,
-                GroupId = request.GroupId,
-                Image = request.Image,
-                IsActive = true
-            }); ;
-            _context.SaveChanges();
+                _context.Products.Add(new Product()
+                {
+                    Name = request.Name,
+                    Price = request.Price,
+                    GroupId = request.GroupId,
+                    Image = request.Image,
+                    IsActive = true
+                }); ;
+                _context.SaveChanges();
+            }
+
         }
 
         public void DeactivateProduct(int productId)
         {
+           
             _context.Products.Single(x => x.Id == productId).IsActive = false;
             _context.SaveChanges();
         }

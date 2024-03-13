@@ -18,7 +18,7 @@ namespace BLL.ServiceInterfaces
         int? filterGroupId = null,
         bool includeInactive = false);
 
-        int AddProduct(ProductRequestDTO request);
+        void AddProduct(ProductRequestDTO request);
         void DeactivateProduct(int productId);
         void DeleteProduct(int productId);
         void ActivateProduct(int productId);

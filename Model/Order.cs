@@ -14,6 +14,7 @@ namespace Model
         public int UserID { get; set; }
         public DateTime Date { get; set; }
         public ICollection<OrderPosition> OrderPositions { get; set; }
+        public bool IsPaid { get; set; }
         public User? User { get; set; }
         public void Configure(EntityTypeBuilder<Order> builder)
         {

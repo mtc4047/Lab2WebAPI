@@ -8,8 +8,8 @@ namespace BLL.DTOModels
 {
     public class OrderRequestDTO
     {
-        public int UserId { get; private set; } 
-        public List<OrderPositionRequestDTO> OrderPositions { get; private set; } 
+        public int UserId { get; init; } 
+        public List<OrderPositionRequestDTO> OrderPositions { get; init; } 
 
         public OrderRequestDTO(int userId, List<OrderPositionRequestDTO> orderPositions)
         {

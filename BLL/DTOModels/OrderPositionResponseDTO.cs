@@ -8,11 +8,11 @@ namespace BLL.DTOModels
 {
     public class OrderPositionResponseDTO
     {
-        public int Id { get; private set; }
-        public int OrderId { get; private set; }
-        public int ProductId { get; private set; }
-        public int Amount { get; private set; }
-        public double Price { get; private set; }
+        public int Id { get; init; }
+        public int OrderId { get; init; }
+        public int ProductId { get; init; }
+        public int Amount { get; init; }
+        public double Price { get; init; }
 
         public OrderPositionResponseDTO(int id, int orderId, int productId, int amount, double price)
         {

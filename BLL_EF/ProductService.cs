@@ -16,30 +16,26 @@ namespace BLL_EF
         }
         public void ActivateProduct(int productId)
         {
-            _context.Products.First(x => x.Id == productId).IsActive = true;
+            _context.Products.Single(x => x.Id == productId).IsActive = true;
             _context.SaveChanges();
         }
 
         public void AddProduct(ProductRequestDTO request)
         {
-            int nextId = _context.Products.Max(x => x.Id) + 1;
             _context.Products.Add(new Product()
             {
-                Id = nextId,
                 Name = request.Name,
                 Price = request.Price,
                 GroupId = request.GroupId,
-                Image= request.Image,
-                IsActive = request.IsActive,
-                BasketPositions = null,
-                ProductGroup = null
-            });
+                Image = request.Image,
+                IsActive = true
+            }); ;
             _context.SaveChanges();
         }
 
         public void DeactivateProduct(int productId)
         {
-            _context.Products.First(x => x.Id == productId).IsActive = false;
+            _context.Products.Single(x => x.Id == productId).IsActive = false;
             _context.SaveChanges();
         }
 
@@ -56,7 +52,72 @@ namespace BLL_EF
 
         public List<ProductResponseDTO> GetProducts(IProductService.ProductSortColumn sortColumn = IProductService.ProductSortColumn.Name, IProductService.SortOrder sortOrder = IProductService.SortOrder.Ascending, string filterName = null, string filterGroupName = null, int? filterGroupId = null, bool includeInactive = false)
         {
-            throw new NotImplementedException();
+            List<ProductResponseDTO> productResponseDTOs = new List<ProductResponseDTO>();
+            var query = _context.Products;
+            if( filterName != null)
+            {
+                query.Where(x => x.Name == filterName);
+            }
+            if (filterGroupName != null)
+            {
+                query.Where(x => x.ProductGroup.Name == filterGroupName);
+            }
+            if (filterGroupId != null)
+            {
+                query.Where(x => x.GroupId == filterGroupId);
+            }
+            if (!includeInactive)
+            {
+                query.Where(x => x.IsActive == true);
+            }
+            switch (sortColumn)
+            {
+                case IProductService.ProductSortColumn.Name:                  
+                    
+                    if (sortOrder == IProductService.SortOrder.Ascending)
+                    {
+                        query.OrderBy(x => x.Name);
+                    }
+                    else
+                    {
+                        query.OrderByDescending(x => x.Name);
+                    }
+                    break;
+                case IProductService.ProductSortColumn.Price:
+                    if (sortOrder == IProductService.SortOrder.Ascending)
+                    {
+                        query.OrderBy(x => x.Price);
+                    }
+                    else
+                    {
+                        query.OrderByDescending(x => x.Price);
+                    }
+                    break;
+                case IProductService.ProductSortColumn.GroupName:
+                    if (sortOrder == IProductService.SortOrder.Ascending)
+                    {
+                        query.OrderBy(x => x.ProductGroup.Name);
+                    }
+                    else
+                    {
+                        query.OrderByDescending(x => x.ProductGroup.Name);
+                    }
+                    break;
+            }
+            foreach ( var product in query)
+            {
+                productResponseDTOs.Add(new ProductResponseDTO()
+                {
+                    Id = product.Id,
+                    GroupName = product.ProductGroup.Name,
+                    Image = product.Image,
+                    GroupId = product.GroupId,
+                    IsActive = product.IsActive,
+                    Name = product.Name,
+                    Price = product.Price
+                });
+            }
+            return productResponseDTOs;
         }
     }
 }

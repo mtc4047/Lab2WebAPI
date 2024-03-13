@@ -8,9 +8,9 @@ namespace BLL.DTOModels
 {
     public class OrderPositionRequestDTO
     {
-        public int ProductId { get; private set; }
-        public int Amount { get; private set; }
-        public double Price { get; private set; }
+        public int ProductId { get; init; }
+        public int Amount { get; init; }
+        public double Price { get; init; }
 
         public OrderPositionRequestDTO(int productId, int amount, double price)
         {

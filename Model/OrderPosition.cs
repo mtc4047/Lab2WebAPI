@@ -13,6 +13,7 @@ namespace Model
         public int Amount { get; set; }
         public double Price { get; set; }
 
+        public Product Product { get; set; }
         public Order Order { get; set; }
     }
 }

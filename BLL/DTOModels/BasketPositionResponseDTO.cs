@@ -8,10 +8,10 @@ namespace BLL.DTOModels
 {
     public class BasketPositionResponseDTO
     {
-        public int Id { get; private set; }
-        public int ProductId { get; private set; }
-        public int UserId { get; private set; }
-        public int Amount { get; private set; }
+        public int Id { get; init; }
+        public int ProductId { get; init; }
+        public int UserId { get; init; }
+        public int Amount { get; init; }
 
 
         public BasketPositionResponseDTO(int id, int productId, int userId, int amount)

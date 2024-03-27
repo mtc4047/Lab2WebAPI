@@ -72,7 +72,75 @@ namespace BLL_EF
 
         public List<ProductResponseDTO> GetProducts(IProductService.ProductSortColumn sortColumn = IProductService.ProductSortColumn.Name, IProductService.SortOrder sortOrder = IProductService.SortOrder.Ascending, string filterName = null, string filterGroupName = null, int? filterGroupId = null, bool includeInactive = false)
         {
+            List<ProductResponseDTO> productResponseDTOs = new List<ProductResponseDTO>();
+            var query = _context.Products;
+            if (filterName != null)
+            {
+                query.Where(x => x.Name == filterName);
+            }
+            if (filterGroupName != null)
+            {
+                query.Where(x => x.ProductGroup.Name == filterGroupName);
+            }
+            if (filterGroupId != null)
+            {
+                query.Where(x => x.GroupId == filterGroupId);
+            }
+            if (!includeInactive)
+            {
+                query.Where(x => x.IsActive == true);
+            }
+            switch (sortColumn)
+            {
+                case IProductService.ProductSortColumn.Name:
+
+                    if (sortOrder == IProductService.SortOrder.Ascending)
+                    {
+                        query.OrderBy(x => x.Name);
+                    }
+                    else
+                    {
+                        query.OrderByDescending(x => x.Name);
+                    }
+                    break;
+                case IProductService.ProductSortColumn.Price:
+                    if (sortOrder == IProductService.SortOrder.Ascending)
+                    {
+                        query.OrderBy(x => x.Price);
+                    }
+                    else
+                    {
+                        query.OrderByDescending(x => x.Price);
+                    }
+                    break;
+                case IProductService.ProductSortColumn.GroupName:
+                    if (sortOrder == IProductService.SortOrder.Ascending)
+                    {
+                        query.OrderBy(x => x.ProductGroup.Name);
+                    }
+                    else
+                    {
+                        query.OrderByDescending(x => x.ProductGroup.Name);
+                    }
+                    break;
+            }
+            foreach (var product in query)
+            {
+                productResponseDTOs.Add(new ProductResponseDTO()
+                {
+                    Id = product.Id,
+                    GroupName = product.ProductGroup.Name,
+                    Image = product.Image,
+                    GroupId = product.GroupId,
+                    IsActive = product.IsActive,
+                    Name = product.Name,
+                    Price = product.Price
+                });
+            }
+            return productResponseDTOs;
             throw new NotImplementedException();
         }
+    }
+}
     }
   }

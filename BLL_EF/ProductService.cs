@@ -39,17 +39,28 @@ namespace BLL_EF
 
         public void DeactivateProduct(int productId)
         {
-            var userId = _context.Products.Single(x => x.Id == productId)
-                 .BasketPositions.Single(x => x.ProductId == productId).UserId;
-            var order = _context.Orders.Single(x => x.UserID == userId);
-            if (order != null)
+            var product = _context.Products.Single(x => x.Id == productId);
+            if (product == null) return;
+            var basketPosition = product.BasketPositions?.Single(x => x.ProductId == productId);
+            if(basketPosition != null)
             {
-                if (order.IsPaid)
+                
+                var order = _context.Orders.Single(x => x.UserID == basketPosition.UserId);
+                if (order != null)
                 {
-                    _context.Products.Single(x => x.Id == productId).IsActive = false;
-                    _context.SaveChanges();
+                    if (order.IsPaid)
+                    {
+                        _context.Products.Single(x => x.Id == productId).IsActive = false;
+                        _context.SaveChanges();
+                    }
                 }
             }
+            else
+            {
+                _context.Products.Single(x => x.Id == productId).IsActive = false;
+                _context.SaveChanges();
+            }
+
 
 
         }
@@ -129,7 +140,7 @@ namespace BLL_EF
                 productResponseDTOs.Add(new ProductResponseDTO()
                 {
                     Id = product.Id,
-                    GroupName = product.ProductGroup.Name,
+                    GroupName = product.ProductGroup != null ? product.ProductGroup.Name : "",
                     Image = product.Image,
                     GroupId = product.GroupId,
                     IsActive = product.IsActive,
@@ -138,7 +149,6 @@ namespace BLL_EF
                 });
             }
             return productResponseDTOs;
-            throw new NotImplementedException();
         }
     
 

@@ -1,4 +1,5 @@
-﻿using BLL.DTOModels;
+﻿using Azure.Core;
+using BLL.DTOModels;
 using BLL.ServiceInterfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,14 +15,23 @@ namespace Lab2WebAPI.Controllers
         {
             _productService = productService;
         }
-        [HttpGet]
+        [HttpGet("GetProducts")]
         public IActionResult GetProducts()
         {
-            var products = _productService.GetProducts();
-            return Ok(products);
+            try
+            {
+                var products = _productService.GetProducts();
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while getting product list: \r\n" + ex.Message);
+            }
+
+
         }
 
-        [HttpPost]
+        [HttpPost("AddProducts")]
         public IActionResult AddProduct([FromBody] ProductRequestDTO request)
         {
             if (!ModelState.IsValid)
@@ -36,8 +46,37 @@ namespace Lab2WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                // Log the exception
-                return StatusCode(500, "An error occurred while adding the product");
+
+                return StatusCode(500, "An error occurred while adding the product: \r\n" + ex.Message);
+            }
+        }
+
+        [HttpPut("DeactivateProduct")]
+        public IActionResult DeactivateProduct(int productId)
+        {
+            try
+            {
+                _productService.DeactivateProduct(productId);
+                return Ok("Product deactivated successfully");
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, "An error occurred while deactivating the product: \r\n" + ex.Message);
+            }
+        }
+        [HttpPut("ActivateProduct")]
+        public IActionResult ActivateProduct(int productId)
+        {
+            try
+            {
+                _productService.ActivateProduct(productId);
+                return Ok("Product activated successfully");
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, "An error occurred while deactivating the product: \r\n" + ex.Message);
             }
         }
     }

@@ -13,8 +13,7 @@ namespace BLL_DB
 {
     public class ProductService : IProductService
     {
-        private string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Webshop;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
-
+        private string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Webshop;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
         public void ActivateProduct(int productId)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -80,28 +79,33 @@ namespace BLL_DB
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "SELECT Id, Name, Price, Image, IsActive, GroupId, GroupName FROM Products WHERE 1=1";
+                string query = @"
+                SELECT p.Id, p.Name, p.Price, p.Image, p.IsActive, p.GroupId, 
+                       COALESCE(pg.Name, 'Unassigned') AS GroupName
+                FROM Products p
+                LEFT JOIN ProductGroups pg ON p.GroupId = pg.Id
+                WHERE 1=1";
 
                 // Apply filters
                 if (!string.IsNullOrEmpty(filterName))
-                    query += $" AND Name LIKE '%{filterName}%'";
+                    query += $" AND p.Name LIKE '%{filterName}%'";
 
                 if (!string.IsNullOrEmpty(filterGroupName))
-                    query += $" AND GroupName = '{filterGroupName}'";
+                    query += $" AND pg.Name = '{filterGroupName}'";
 
                 if (filterGroupId.HasValue)
-                    query += $" AND GroupId = {filterGroupId}";
+                    query += $" AND p.GroupId = {filterGroupId}";
 
                 if (!includeInactive)
-                    query += " AND IsActive = 1";
+                    query += " AND p.IsActive = 1";
 
                 switch (sortColumn)
                 {
                     case IProductService.ProductSortColumn.Name:
-                        query += $" ORDER BY Name {(sortOrder == IProductService.SortOrder.Ascending ? "ASC" : "DESC")}";
+                        query += $" ORDER BY p.Name {(sortOrder == IProductService.SortOrder.Ascending ? "ASC" : "DESC")}";
                         break;
                     case IProductService.ProductSortColumn.Price:
-                        query += $" ORDER BY Price {(sortOrder == IProductService.SortOrder.Ascending ? "ASC" : "DESC")}";
+                        query += $" ORDER BY p.Price {(sortOrder == IProductService.SortOrder.Ascending ? "ASC" : "DESC")}";
                         break;
                 }
 

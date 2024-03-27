@@ -31,6 +31,7 @@ namespace BLL_EF
             {
                 UserID = userId,
                 Date = DateTime.Now,
+                IsPaid = false
             };
 
             _context.Orders.Add(order);

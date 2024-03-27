@@ -24,7 +24,7 @@ namespace Lab2WebAPI.Controllers
             catch (Exception ex)
             {
 
-                return StatusCode(500, "An error occurred while generating order: \r\n" + ex.InnerException);
+                return StatusCode(500, "An error occurred while generating order: \r\nMessage:" +ex.Message+"\r\nInnerException" + ex.InnerException);
             }
         }
 

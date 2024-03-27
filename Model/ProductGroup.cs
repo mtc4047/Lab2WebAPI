@@ -14,20 +14,12 @@ namespace Model
         public string Name { get; set; }
         public int? ParentID { get; set; }
 
-        public ICollection<Product>? Products { get; set; }
-        public ProductGroup? ParentGroup { get; set; }
-        public ICollection<ProductGroup> Groups { get; set; }
+        public List<Product> Products { get; set; }
+
         public void Configure(EntityTypeBuilder<ProductGroup> builder)
         {
             builder.HasKey(x => x.Id);
-            builder.HasMany(d => d.Products)
-                .WithOne(t => t.ProductGroup)
-                .HasForeignKey(t => t.Id)
-                .OnDelete(DeleteBehavior.Cascade);
-            builder.HasMany(d => d.Groups)
-                .WithOne(d => d.ParentGroup)
-                .HasForeignKey(d => d.ParentID)
-                .OnDelete(DeleteBehavior.NoAction);
+
         }
     }
 }

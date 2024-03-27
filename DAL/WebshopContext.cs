@@ -17,8 +17,18 @@ namespace DAL
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Webshop;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
+            optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Webshop2;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False");
         }
-
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new BasketPosition());
+            modelBuilder.ApplyConfiguration(new Order());
+            modelBuilder.ApplyConfiguration(new OrderPosition());
+            modelBuilder.ApplyConfiguration(new Product());
+            modelBuilder.ApplyConfiguration(new ProductGroup());
+            modelBuilder.ApplyConfiguration(new Model.Type());
+            modelBuilder.ApplyConfiguration(new User());
+            modelBuilder.ApplyConfiguration(new UserGroup());
+        }
     }
 }

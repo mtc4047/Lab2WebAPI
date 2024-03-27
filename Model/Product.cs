@@ -21,19 +21,14 @@ namespace Model
         public ICollection<OrderPosition>? OrderPositions { get; set; }
 
         public ProductGroup ProductGroup { get; set; }
-
-
         public void Configure(EntityTypeBuilder<Product> builder)
         {
             builder.HasKey(d => d.Id);
-            builder.HasMany(d => d.BasketPositions)
-            .WithOne(t => t.Product)
-            .HasForeignKey(t => t.ProductId)
-            .OnDelete(DeleteBehavior.Cascade);
-            builder.HasMany(t => t.OrderPositions)
-            .WithOne(t => t.Product)
-            .HasForeignKey(t => t.OrderId)
-            .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.ProductGroup)
+                .WithMany( x => x.Products)
+                .HasForeignKey(x => x.GroupId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

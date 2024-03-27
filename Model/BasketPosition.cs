@@ -20,6 +20,14 @@ namespace Model
         public void Configure(EntityTypeBuilder<BasketPosition> builder)
         {
             builder.HasKey(x => x.Id);
+            builder.HasOne(d => d.Product)
+            .WithMany(t => t.BasketPositions)
+            .HasForeignKey(t => t.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(d => d.User)
+            .WithMany(t => t.BasketPositions)
+            .HasForeignKey(t => t.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

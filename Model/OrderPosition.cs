@@ -21,6 +21,10 @@ namespace Model
         public void Configure(EntityTypeBuilder<OrderPosition> builder)
         {
             builder.HasKey(x => x.Id);
+            builder.HasOne(t => t.Order)
+            .WithMany(t => t.OrderPositions)
+            .HasForeignKey(t => t.Id)
+            .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -22,13 +22,37 @@ namespace BLL_EF
 
         public void GenerateOrder(int userId)
         {
+            var basketPositions = _context.BasketPositions
+              .Include(bp => bp.Product)
+              .Where(bp => bp.UserId == userId)
+              .ToList();
 
-            _context.Orders.Add(new Order()
+            var order = new Order
             {
                 UserID = userId,
                 Date = DateTime.Now,
-            });
+            };
+
+            _context.Orders.Add(order);
             _context.SaveChanges();
+            int orderId = order.Id;
+            var orderPositions = new List<OrderPosition>();
+            foreach (var basketPosition in basketPositions)
+            {
+                orderPositions.Add(new OrderPosition
+                {
+                    Amount = basketPosition.Amount,
+                    Price = basketPosition.Product.Price,
+                    Product = basketPosition.Product,
+                    OrderId=orderId
+                });
+            }
+
+
+            _context.OrdersPositions.AddRange(orderPositions);
+            _context.SaveChanges();
+
+
         }
 
         public void PayOrder(int Id, int amount)

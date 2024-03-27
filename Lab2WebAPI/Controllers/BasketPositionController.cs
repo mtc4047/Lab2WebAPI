@@ -6,12 +6,14 @@ using Model;
 
 namespace Lab2WebAPI.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class BasketPositionController : Controller
     {
         private readonly IBasketPositionService _basketPositionService;
-        public BasketPositionController(IBasketPositionService _basketPositionService)
+        public BasketPositionController(IBasketPositionService basketPositionService)
         {
-            _basketPositionService = _basketPositionService;
+            _basketPositionService = basketPositionService;
         }
 
         [HttpPost("AddProductToBasket")]
@@ -64,7 +66,7 @@ namespace Lab2WebAPI.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("GetBasketPositions")]
         public IActionResult GetBasketPositions(int userId)
         {
             try

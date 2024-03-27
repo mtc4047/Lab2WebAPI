@@ -7,7 +7,7 @@ namespace BLL_DB
 {
     public class BasketPositionService : IBasketPositionService
     {
-        private string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Webshop;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
+        private string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Webshop;Integrated Security=True;Connect Timeout=30;Encrypt=False;";
 
         public void AddProductToBasket(BasketPositionRequestDTO request)
         {

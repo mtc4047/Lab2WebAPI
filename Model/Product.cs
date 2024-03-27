@@ -29,6 +29,14 @@ namespace Model
                 .HasForeignKey(x => x.GroupId)
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(d => d.BasketPositions)
+            .WithOne(t => t.Product)
+            .HasForeignKey(t => t.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(t => t.OrderPositions)
+            .WithOne(t => t.Product)
+            .HasForeignKey(t => t.OrderId)
+            .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

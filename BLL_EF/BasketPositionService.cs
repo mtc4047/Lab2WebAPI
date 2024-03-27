@@ -22,7 +22,10 @@ namespace BLL_EF
 
         public void AddProductToBasket(BasketPositionRequestDTO request)
         {
-            if(_context.Products.Single(x => x.Id == request.ProductId).IsActive){
+            var product = _context.Products.Single(x => x.Id == request.ProductId);
+            if (product == null) return;
+            if (product.IsActive){
+
                 _context.BasketPositions.Add(new BasketPosition()
                 {
                     ProductId = request.ProductId,
@@ -38,7 +41,7 @@ namespace BLL_EF
         {
             if(newQuantity > 0)
             {
-                _context.BasketPositions.Single(x => x.ProductId == userId && x.ProductId == productId).Amount = newQuantity;
+                _context.BasketPositions.Single(x => x.UserId == userId && x.ProductId == productId).Amount = newQuantity;
                 _context.SaveChanges();
             }
 

@@ -22,14 +22,11 @@ namespace BLL_EF
 
         public void GenerateOrder(int userId)
         {
-
-            // Filter basket positions for the user
             var basketPositions = _context.BasketPositions
                 .Include(bp => bp.Product)
                 .Where(bp => bp.UserId == userId)
                 .ToList();
             if (basketPositions == null) { throw new Exception("Koszyk pusty lub użytkownik nie istnieje"); }
-            // Create a new order
             var newOrder = new Order
             {
                 UserID = userId,
@@ -38,23 +35,20 @@ namespace BLL_EF
                 OrderPositions = new List<OrderPosition>()
             };
 
-            // Create order positions for each basket position
             foreach (var basketPosition in basketPositions)
             {
                 var orderPosition = new OrderPosition
                 {
                     Order = newOrder,
-                    Product = basketPosition.Product, // Use the Product navigation property
+                    Product = basketPosition.Product, 
                     Amount = basketPosition.Amount,
-                    Price = basketPosition.Product.Price // Assuming Product has a Price property
+                    Price = basketPosition.Product.Price 
                 };
                 _context.OrdersPositions.Add(orderPosition);
             }
 
-            // Add the new order and its positions to the context
             _context.Orders.Add(newOrder);
 
-            // Save changes to the database
             _context.SaveChanges();
 
 

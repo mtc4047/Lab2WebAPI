@@ -22,12 +22,13 @@ namespace BLL_EF
 
         public void GenerateOrder(int userId)
         {
+
             // Filter basket positions for the user
             var basketPositions = _context.BasketPositions
                 .Include(bp => bp.Product)
                 .Where(bp => bp.UserId == userId)
                 .ToList();
-
+            if (basketPositions == null) { throw new Exception("Koszyk pusty lub użytkownik nie istnieje"); }
             // Create a new order
             var newOrder = new Order
             {
@@ -64,14 +65,21 @@ namespace BLL_EF
             if(_context.Orders.Single(x => x.Id == Id).IsPaid == false)
             {
                 double sum = 0.0;
-                foreach (var orderPosition in _context.Orders.Single(x => x.Id == Id).OrderPositions)
+                foreach (var orderPosition in _context.Orders.Include(op => op.OrderPositions).Single(x => x.Id == Id).OrderPositions)
                 {
                     sum += orderPosition.Amount * orderPosition.Price;
                 }
 
                 if (amount == sum)
+                {
                     _context.Orders.Single(x => x.Id == Id).IsPaid = true;
-                _context.SaveChanges();
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    throw new Exception("nieprawidłowa kwota");
+                }
+                
             }
 
         }

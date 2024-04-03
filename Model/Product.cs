@@ -18,7 +18,6 @@ namespace Model
         public int? GroupId { get; set; }
 
         public ICollection<BasketPosition>? BasketPositions { get; set; }
-        public ICollection<OrderPosition>? OrderPositions { get; set; }
 
         public ProductGroup ProductGroup { get; set; }
         public void Configure(EntityTypeBuilder<Product> builder)
@@ -32,10 +31,6 @@ namespace Model
             builder.HasMany(d => d.BasketPositions)
             .WithOne(t => t.Product)
             .HasForeignKey(t => t.ProductId)
-            .OnDelete(DeleteBehavior.Cascade);
-            builder.HasMany(t => t.OrderPositions)
-            .WithOne(t => t.Product)
-            .HasForeignKey(t => t.OrderId)
             .OnDelete(DeleteBehavior.Cascade);
         }
     }

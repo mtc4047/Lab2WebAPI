@@ -22,35 +22,38 @@ namespace BLL_EF
 
         public void GenerateOrder(int userId)
         {
+            // Filter basket positions for the user
             var basketPositions = _context.BasketPositions
-              .Include(bp => bp.Product)
-              .Where(bp => bp.UserId == userId)
-              .ToList();
+                .Include(bp => bp.Product)
+                .Where(bp => bp.UserId == userId)
+                .ToList();
 
-            var order = new Order
+            // Create a new order
+            var newOrder = new Order
             {
                 UserID = userId,
                 Date = DateTime.Now,
-                IsPaid = false
+                IsPaid = false,
+                OrderPositions = new List<OrderPosition>()
             };
 
-            _context.Orders.Add(order);
-            _context.SaveChanges();
-            int orderId = order.Id;
-            var orderPositions = new List<OrderPosition>();
+            // Create order positions for each basket position
             foreach (var basketPosition in basketPositions)
             {
-                orderPositions.Add(new OrderPosition
+                var orderPosition = new OrderPosition
                 {
+                    Order = newOrder,
+                    Product = basketPosition.Product, // Use the Product navigation property
                     Amount = basketPosition.Amount,
-                    Price = basketPosition.Product.Price,
-                    Product = basketPosition.Product,
-                    OrderId=orderId
-                });
+                    Price = basketPosition.Product.Price // Assuming Product has a Price property
+                };
+                _context.OrdersPositions.Add(orderPosition);
             }
 
+            // Add the new order and its positions to the context
+            _context.Orders.Add(newOrder);
 
-            _context.OrdersPositions.AddRange(orderPositions);
+            // Save changes to the database
             _context.SaveChanges();
 
 

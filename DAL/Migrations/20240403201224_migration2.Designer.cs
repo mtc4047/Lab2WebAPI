@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(WebshopContext))]
-    [Migration("20240327174046_migration3")]
-    partial class migration3
+    [Migration("20240403201224_migration2")]
+    partial class migration2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

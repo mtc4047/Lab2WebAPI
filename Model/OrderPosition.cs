@@ -22,9 +22,9 @@ namespace Model
         {
             builder.HasKey(x => x.Id);
             builder.HasOne(t => t.Order)
-            .WithMany(t => t.OrderPositions)
-            .HasForeignKey(t => t.Id)
-            .OnDelete(DeleteBehavior.Cascade);
+              .WithMany(t => t.OrderPositions)
+              .HasForeignKey(t => t.OrderId)
+              .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(WebshopContext))]
-    [Migration("20240327173717_migration2")]
-    partial class migration2
+    [Migration("20240403221718_migration4")]
+    partial class migration4
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -92,9 +92,14 @@ namespace DAL.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("OrdersPositions");
                 });
@@ -254,12 +259,12 @@ namespace DAL.Migrations
                     b.HasOne("Model.Order", "Order")
                         .WithMany("OrderPositions")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Model.Product", "Product")
-                        .WithMany("OrderPositions")
-                        .HasForeignKey("OrderId")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -305,8 +310,6 @@ namespace DAL.Migrations
             modelBuilder.Entity("Model.Product", b =>
                 {
                     b.Navigation("BasketPositions");
-
-                    b.Navigation("OrderPositions");
                 });
 
             modelBuilder.Entity("Model.ProductGroup", b =>

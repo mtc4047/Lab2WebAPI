@@ -16,11 +16,11 @@ namespace Lab2WebAPI.Controllers
             _productService = productService;
         }
         [HttpGet("GetProducts")]
-        public IActionResult GetProducts()
+        public IActionResult GetProducts(IProductService.ProductSortColumn sortColumn = IProductService.ProductSortColumn.Name, IProductService.SortOrder sortOrder = IProductService.SortOrder.Ascending, string filterName = null, string filterGroupName = null, int? filterGroupId = null, bool includeInactive = false)
         {
             try
             {
-                var products = _productService.GetProducts();
+                var products = _productService.GetProducts(sortColumn,sortOrder, filterName, filterGroupName, filterGroupId, includeInactive);
                 return Ok(products);
             }
             catch (Exception ex)

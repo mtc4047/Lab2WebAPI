@@ -1,7 +1,9 @@
-﻿using BLL.DTOModels;
+﻿using Azure;
+using BLL.DTOModels;
 using BLL.ServiceInterfaces;
 using DAL;
 using DTOModels;
+using Microsoft.EntityFrameworkCore;
 using Model;
 
 namespace BLL_EF
@@ -84,22 +86,22 @@ namespace BLL_EF
         public List<ProductResponseDTO> GetProducts(IProductService.ProductSortColumn sortColumn = IProductService.ProductSortColumn.Name, IProductService.SortOrder sortOrder = IProductService.SortOrder.Ascending, string filterName = null, string filterGroupName = null, int? filterGroupId = null, bool includeInactive = false)
         {
             List<ProductResponseDTO> productResponseDTOs = new List<ProductResponseDTO>();
-            var query = _context.Products;
+            IQueryable<Product> query = _context.Products.Include(pg => pg.ProductGroup);
             if (filterName != null)
             {
-                query.Where(x => x.Name == filterName);
+                query = query.Where(x => x.Name == filterName);
             }
             if (filterGroupName != null)
             {
-                query.Where(x => x.ProductGroup.Name == filterGroupName);
+                query = query.Where(x => x.ProductGroup.Name == filterGroupName);
             }
             if (filterGroupId != null)
             {
-                query.Where(x => x.GroupId == filterGroupId);
+                query = query.Where(x => x.GroupId == filterGroupId);
             }
             if (!includeInactive)
             {
-                query.Where(x => x.IsActive == true);
+                query = query.Where(x => x.IsActive == true);
             }
             switch (sortColumn)
             {
@@ -107,31 +109,31 @@ namespace BLL_EF
 
                     if (sortOrder == IProductService.SortOrder.Ascending)
                     {
-                        query.OrderBy(x => x.Name);
+                        query = query.OrderBy(x => x.Name);
                     }
                     else
                     {
-                        query.OrderByDescending(x => x.Name);
+                        query = query.OrderByDescending(x => x.Name);
                     }
                     break;
                 case IProductService.ProductSortColumn.Price:
                     if (sortOrder == IProductService.SortOrder.Ascending)
                     {
-                        query.OrderBy(x => x.Price);
+                        query = query.OrderBy(x => x.Price);
                     }
                     else
                     {
-                        query.OrderByDescending(x => x.Price);
+                        query = query.OrderByDescending(x => x.Price);
                     }
                     break;
                 case IProductService.ProductSortColumn.GroupName:
                     if (sortOrder == IProductService.SortOrder.Ascending)
                     {
-                        query.OrderBy(x => x.ProductGroup.Name);
+                        query = query.OrderBy(x => x.ProductGroup.Name);
                     }
                     else
                     {
-                        query.OrderByDescending(x => x.ProductGroup.Name);
+                        query = query.OrderByDescending(x => x.ProductGroup.Name);
                     }
                     break;
             }

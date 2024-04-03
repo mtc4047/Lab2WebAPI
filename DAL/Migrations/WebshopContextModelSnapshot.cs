@@ -45,7 +45,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("BasketPositions", (string)null);
+                    b.ToTable("BasketPositions");
                 });
 
             modelBuilder.Entity("Model.Order", b =>
@@ -69,7 +69,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("Model.OrderPosition", b =>
@@ -89,11 +89,16 @@ namespace DAL.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrdersPositions", (string)null);
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrdersPositions");
                 });
 
             modelBuilder.Entity("Model.Product", b =>
@@ -125,7 +130,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Model.ProductGroup", b =>
@@ -145,7 +150,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductGroups", (string)null);
+                    b.ToTable("ProductGroups");
                 });
 
             modelBuilder.Entity("Model.Type", b =>
@@ -162,7 +167,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Types", (string)null);
+                    b.ToTable("Types");
                 });
 
             modelBuilder.Entity("Model.User", b =>
@@ -196,7 +201,7 @@ namespace DAL.Migrations
 
                     b.HasIndex("TypeId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Model.UserGroup", b =>
@@ -213,7 +218,7 @@ namespace DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserGroups", (string)null);
+                    b.ToTable("UserGroups");
                 });
 
             modelBuilder.Entity("Model.BasketPosition", b =>
@@ -251,12 +256,12 @@ namespace DAL.Migrations
                     b.HasOne("Model.Order", "Order")
                         .WithMany("OrderPositions")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Model.Product", "Product")
-                        .WithMany("OrderPositions")
-                        .HasForeignKey("OrderId")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -302,8 +307,6 @@ namespace DAL.Migrations
             modelBuilder.Entity("Model.Product", b =>
                 {
                     b.Navigation("BasketPositions");
-
-                    b.Navigation("OrderPositions");
                 });
 
             modelBuilder.Entity("Model.ProductGroup", b =>

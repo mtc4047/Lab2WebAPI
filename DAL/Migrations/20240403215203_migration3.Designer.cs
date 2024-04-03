@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(WebshopContext))]
-    [Migration("20240327180927_migration4")]
-    partial class migration4
+    [Migration("20240403215203_migration3")]
+    partial class migration3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -254,7 +254,7 @@ namespace DAL.Migrations
                     b.HasOne("Model.Order", "Order")
                         .WithMany("OrderPositions")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Model.Product", "Product")

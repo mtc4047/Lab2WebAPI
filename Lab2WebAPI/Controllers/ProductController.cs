@@ -79,5 +79,20 @@ namespace Lab2WebAPI.Controllers
                 return StatusCode(500, "An error occurred while deactivating the product: \r\n" + ex.Message);
             }
         }
+
+        [HttpDelete("DeleteProduct")]
+        public IActionResult DeleteProduct(int productId)
+        {
+            try
+            {
+                _productService.DeleteProduct(productId);
+                return Ok("Product deleted successfully");
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, "An error occurred while deleting the product: \r\n" + ex.Message);
+            }
+        }
     }
 }

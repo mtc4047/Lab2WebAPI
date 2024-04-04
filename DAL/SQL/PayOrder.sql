@@ -1,18 +1,36 @@
 CREATE PROCEDURE PayOrder
     @OrderId INT,
-    @Amount DECIMAL(18, 2)
+    @Amount DECIMAL
 AS
 BEGIN
-    DECLARE @TotalAmount DECIMAL(18, 2)
+    DECLARE @IsPaid BIT
+    DECLARE @TotalAmount DECIMAL
+
+    SELECT @IsPaid = IsPaid
+    FROM Orders
+    WHERE Id = @OrderId
+
+    IF @IsPaid IS NULL OR @IsPaid = 1
+    BEGIN
+        RETURN;
+    END
 
     SELECT @TotalAmount = SUM(op.Amount * op.Price)
-    FROM OrderPositions op
-    WHERE op.OrderId = @OrderId;
+    FROM OrdersPositions op
+    WHERE op.OrderID = @OrderId
 
-    IF (@TotalAmount = @Amount)
+
+    IF @Amount = @TotalAmount
     BEGIN
         UPDATE Orders
         SET IsPaid = 1
-        WHERE Id = @OrderId;
+        WHERE Id = @OrderId
+
+        COMMIT;
+    END
+    ELSE
+    BEGIN
+
+        RETURN;
     END
 END
